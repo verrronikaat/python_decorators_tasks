@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+*.txt
+*.log
+*.tmp
+new_poem.txt
+poem.txt
+
+# IDE
+.vscode/
+.idea/
