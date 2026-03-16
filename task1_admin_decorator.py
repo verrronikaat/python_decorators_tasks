@@ -1,26 +1,27 @@
 """
 Задача 1. Права администратора
-Декоратор role_required(role: str) для ограничения доступа к функции
+Декоратор role_required(roles: list) для ограничения доступа
+Доступны роли: admin и teacher
 """
 
 # Глобальная переменная с ролью текущего пользователя
 current_user_role = None
 
-def role_required(required_role):
+def role_required(allowed_roles):
     """
-    Декоратор, который проверяет, имеет ли пользователь необходимую роль
+    Декоратор, который проверяет, имеет ли пользователь одну из допустимых ролей
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            if current_user_role == required_role:
+            if current_user_role in allowed_roles:
                 return func(*args, **kwargs)
             else:
-                return f"Доступ запрещен! Требуется роль: {required_role}, текущая роль: {current_user_role}"
+                return f"Доступ запрещен! Требуется одна из ролей: {allowed_roles}, текущая роль: {current_user_role}"
         return wrapper
     return decorator
 
-# Декорируем функцию, которая должна быть доступна только админам
-@role_required('admin')
+# Создаем функцию, доступную для admin и teacher
+@role_required(['admin', 'teacher'])
 def secret_resource():
     """Функция, представляющая защищенный ресурс"""
     return "Секретный ресурс успешно получен!"
@@ -76,6 +77,7 @@ def process_list_operations():
 
 def main():
     print("Задача 1: Декоратор прав администратора")
+    print("Доступные роли: admin, teacher")
     print("-" * 40)
     
     global current_user_role
@@ -90,13 +92,13 @@ def main():
     current_user_role = 'teacher'
     print(secret_resource())
     
-    # Тест 3: Пользователь без роли
-    print("\nТест 3: Пользователь без роли")
-    current_user_role = None
+    # Тест 3: Пользователь с ролью student (доступ запрещен)
+    print("\nТест 3: Пользователь с ролью 'student'")
+    current_user_role = 'student'
     print(secret_resource())
     
     # Выполнение операций со списком
     process_list_operations()
 
 if __name__ == "__main__":
-    main() 
+    main()
